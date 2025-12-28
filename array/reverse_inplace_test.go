@@ -3,6 +3,8 @@ package array
 import (
 	"slices"
 	"testing"
+
+	dyson "github.com/spring1843/go-dsa/dysons_array_solutions"
 )
 
 /*
@@ -40,4 +42,33 @@ func TestReverseInPlace(t *testing.T) {
 			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.reversed, test.list)
 		}
 	}
+}
+
+
+// How to run benchmarks:
+/*
+	cd /Users/dysonbreakstone/coding/learning/go/go-dsa
+	go test ./array -bench=ReverseInPlace -benchmem
+	// -bench=ReverseInPlace gives 'go test' the name of the function to benchmark using regex
+	// -benchmem shows memory allocation and garbage collection statistics
+*/
+func BenchmarkReverseInPlace(b *testing.B) {
+    base := make([]int, 1000)
+    for i := range base {
+        base[i] = i
+    }
+
+    b.Run("repo", func(b *testing.B) {
+        for i := 0; i < b.N; i++ {
+            data := append([]int(nil), base...) // copy because function mutates
+            ReverseInPlace(data, 0, len(data)-1)
+        }
+    })
+
+    b.Run("dyson", func(b *testing.B) {
+        for i := 0; i < b.N; i++ {
+            data := append([]int(nil), base...)
+            dyson.ReverseInPlace(data, 0, len(data)-1)
+        }
+    })
 }
